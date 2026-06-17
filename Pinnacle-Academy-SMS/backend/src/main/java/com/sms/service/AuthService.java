@@ -41,8 +41,14 @@ public class AuthService {
             throw new RuntimeException("User account is inactive");
         }
 
-        String token = jwtUtil.generateToken(() -> user.getEmail(), user.getRole().toString());
+    org.springframework.security.core.userdetails.UserDetails userDetails =
+        org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_" + user.getRole())
+                .build();
 
+        String token = jwtUtil.generateToken(userDetails, user.getRole().toString());
         return LoginResponseDTO.builder()
                 .token(token)
                 .email(user.getEmail())
