@@ -27,7 +27,5 @@ public class StudentDTO {
     private Double gpa;
     private Boolean isActive;
 
-    public Long getUserId() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    
 }
