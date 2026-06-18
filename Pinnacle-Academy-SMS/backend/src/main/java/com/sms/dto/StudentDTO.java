@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Builder
 public class StudentDTO {
     private Long id;
+    private Long userId;
+
     private String email;
     private String firstName;
     private String lastName;
@@ -24,4 +26,8 @@ public class StudentDTO {
     private LocalDate enrollmentDate;
     private Double gpa;
     private Boolean isActive;
+
+    public Long getUserId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
