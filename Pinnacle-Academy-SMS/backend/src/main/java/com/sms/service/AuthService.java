@@ -72,7 +72,7 @@ public class AuthService {
                 .lastName(registerDTO.getLastName())
                 .role(User.UserRole.valueOf(registerDTO.getRole().toUpperCase()))
                 .isActive(true)
-                .isApproved(false)
+                .isApproved(true)
                 .build();
 
         userRepository.save(user);
