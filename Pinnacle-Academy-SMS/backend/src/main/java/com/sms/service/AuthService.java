@@ -77,7 +77,17 @@ public class AuthService {
 
         userRepository.save(user);
 
+        org.springframework.security.core.userdetails.UserDetails userDetails =
+        org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities("ROLE_" + user.getRole())
+                .build();
+
+    String token = jwtUtil.generateToken(userDetails, user.getRole().toString());
+
         return LoginResponseDTO.builder()
+                .token(token)
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
