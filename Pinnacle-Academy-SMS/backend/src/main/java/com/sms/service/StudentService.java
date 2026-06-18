@@ -98,6 +98,7 @@ public class StudentService {
     private StudentDTO mapToDTO(Student student) {
         return StudentDTO.builder()
                 .id(student.getId())
+                .userId(student.getUser().getId())
                 .email(student.getUser().getEmail())
                 .firstName(student.getUser().getFirstName())
                 .lastName(student.getUser().getLastName())
