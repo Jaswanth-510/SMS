@@ -47,20 +47,31 @@ public class Student {
     @Column(nullable = true)
     private String parentPhone;
 
+   @Builder.Default
     @Column(nullable = false)
     private LocalDate enrollmentDate = LocalDate.now();
 
+    @Builder.Default
     @Column(nullable = false)
     private Double gpa = 0.0;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @Builder.Default
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+   @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
 
     @PreUpdate
     protected void onUpdate() {
