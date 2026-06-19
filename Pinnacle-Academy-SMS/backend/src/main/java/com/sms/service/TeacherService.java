@@ -67,10 +67,14 @@ public class TeacherService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+   @Transactional
     public TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+        if (!teacher.getIsActive()) {
+            throw new RuntimeException("Teacher is inactive");
+        }
 
         teacher.setSpecialization(teacherDTO.getSpecialization());
         teacher.setQualifications(teacherDTO.getQualifications());
@@ -81,7 +85,6 @@ public class TeacherService {
         Teacher updatedTeacher = teacherRepository.save(teacher);
         return mapToDTO(updatedTeacher);
     }
-
     @Transactional
     public void deleteTeacher(Long id) {
         Teacher teacher = teacherRepository.findById(id)
