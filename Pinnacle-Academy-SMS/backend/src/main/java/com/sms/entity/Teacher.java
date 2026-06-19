@@ -54,4 +54,8 @@ public class Teacher {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public Object getUser() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

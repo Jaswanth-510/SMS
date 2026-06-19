@@ -60,7 +60,7 @@ public class TeacherController {
     @Operation(summary = "Create teacher", description = "Create a new teacher")
     public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teacherDTO) {
         try {
-            TeacherDTO createdTeacher = teacherService.createTeacher(teacherDTO, teacherDTO.getId());
+            TeacherDTO createdTeacher = teacherService.createTeacher(teacherDTO, teacherDTO.getUserId());
             return ResponseEntity.ok(createdTeacher);
         } catch (Exception e) {
             log.error("Error creating teacher: {}", e.getMessage());

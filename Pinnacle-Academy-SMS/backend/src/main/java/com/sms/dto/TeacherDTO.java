@@ -8,7 +8,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class TeacherDTO {
+
     private Long id;
+    private Long userId;
+
     private String email;
     private String firstName;
     private String lastName;

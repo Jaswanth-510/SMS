@@ -91,19 +91,20 @@ public class TeacherService {
     }
 
     private TeacherDTO mapToDTO(Teacher teacher) {
-        return TeacherDTO.builder()
-                .id(teacher.getId())
-                .email(teacher.getUser().getEmail())
-                .firstName(teacher.getUser().getFirstName())
-                .lastName(teacher.getUser().getLastName())
-                .employeeId(teacher.getEmployeeId())
-                .specialization(teacher.getSpecialization())
-                .qualifications(teacher.getQualifications())
-                .department(teacher.getDepartment())
-                .joinDate(teacher.getJoinDate())
-                .phoneNumber(teacher.getPhoneNumber())
-                .address(teacher.getAddress())
-                .isActive(teacher.getIsActive())
-                .build();
-    }
+    return TeacherDTO.builder()
+            .id(teacher.getId())
+            .userId(teacher.getUser().getId()) // ADD THIS
+            .email(teacher.getUser().getEmail())
+            .firstName(teacher.getUser().getFirstName())
+            .lastName(teacher.getUser().getLastName())
+            .employeeId(teacher.getEmployeeId())
+            .specialization(teacher.getSpecialization())
+            .qualifications(teacher.getQualifications())
+            .department(teacher.getDepartment())
+            .joinDate(teacher.getJoinDate())
+            .phoneNumber(teacher.getPhoneNumber())
+            .address(teacher.getAddress())
+            .isActive(teacher.getIsActive())
+            .build();
+}
 }
