@@ -2,6 +2,7 @@ package com.sms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Marks {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,32 +28,37 @@ public class Marks {
     @Column(nullable = false)
     private Double marksObtained;
 
+    @Builder.Default
     @Column(nullable = false)
     private Double totalMarks = 100.0;
 
     @Column(nullable = false)
     private Double percentage;
 
-    @Column(nullable = true)
+    @Column
     private String grade;
 
-    @Column(nullable = true)
+    @Column
     private String remarks;
 
+    @Builder.Default
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @PreUpdate
-    protected void onUpdate() {
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
         calculatePercentageAndGrade();
     }
 
-    @PrePersist
-    protected void onCreate() {
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
         calculatePercentageAndGrade();
     }
 
@@ -70,4 +77,6 @@ public class Marks {
         if (percentage >= 50) return "D";
         return "F";
     }
+
+   
 }
