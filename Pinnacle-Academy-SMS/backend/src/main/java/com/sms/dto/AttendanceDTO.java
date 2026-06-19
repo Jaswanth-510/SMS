@@ -1,6 +1,10 @@
 package com.sms.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
@@ -8,16 +12,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class AttendanceDTO {
+
     private Long id;
+
     private Long studentId;
     private String studentName;
+
     private Long courseId;
     private String courseName;
-    private LocalDate attendanceDate;
-    private String status;
-    private String remarks;
 
-    public String getStatus() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    private LocalDate attendanceDate;
+
+    private String status;
+
+    private String remarks;
 }
