@@ -16,4 +16,8 @@ public class AttendanceDTO {
     private LocalDate attendanceDate;
     private String status;
     private String remarks;
+
+    public String getStatus() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
