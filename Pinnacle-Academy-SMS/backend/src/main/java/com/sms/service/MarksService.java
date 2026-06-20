@@ -7,8 +7,10 @@ import com.sms.entity.Student;
 import com.sms.repository.CourseRepository;
 import com.sms.repository.MarksRepository;
 import com.sms.repository.StudentRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,11 +37,15 @@ public class MarksService {
 
         Student student = studentRepository.findById(dto.getStudentId())
                 .orElseThrow(() ->
-                        new RuntimeException("Student not found"));
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Student not found"));
 
         Course course = courseRepository.findById(dto.getCourseId())
                 .orElseThrow(() ->
-                        new RuntimeException("Course not found"));
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Course not found"));
 
         Marks marks = Marks.builder()
                 .student(student)
@@ -55,6 +61,7 @@ public class MarksService {
     }
 
     public List<MarksDTO> getAllMarks() {
+
         return marksRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
@@ -65,7 +72,9 @@ public class MarksService {
 
         Marks marks = marksRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Marks record not found"));
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Marks record not found"));
 
         return mapToDTO(marks);
     }
@@ -74,7 +83,9 @@ public class MarksService {
 
         Marks marks = marksRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Marks not found"));
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Marks not found"));
 
         marks.setMarksObtained(dto.getMarksObtained());
         marks.setTotalMarks(dto.getTotalMarks());
@@ -89,7 +100,9 @@ public class MarksService {
 
         Marks marks = marksRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Marks not found"));
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Marks not found"));
 
         marksRepository.delete(marks);
     }
