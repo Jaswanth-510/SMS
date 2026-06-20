@@ -6,27 +6,40 @@ import com.sms.entity.User;
 import com.sms.repository.StudentRepository;
 import com.sms.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @Slf4j
 public class StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
-    @Transactional
+    public StudentService(
+            StudentRepository studentRepository,
+            UserRepository userRepository) {
+
+        this.studentRepository = studentRepository;
+        this.userRepository = userRepository;
+    }
+
     public StudentDTO createStudent(StudentDTO studentDTO, Long userId) {
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "User not found"));
 
         Student student = Student.builder()
                 .user(user)
@@ -43,37 +56,79 @@ public class StudentService {
                 .build();
 
         Student savedStudent = studentRepository.save(student);
+
         return mapToDTO(savedStudent);
     }
 
     public StudentDTO getStudentById(Long id) {
+
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Student not found"));
+
         return mapToDTO(student);
     }
 
     public StudentDTO getStudentByUserId(Long userId) {
+
         Student student = studentRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Student not found"));
+
         return mapToDTO(student);
     }
 
     public List<StudentDTO> getAllStudents() {
-        return studentRepository.findAll().stream()
+
+        return studentRepository.findAll()
+                .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     public List<StudentDTO> getStudentsByClass(String className) {
-        return studentRepository.findByClassName(className).stream()
+
+        return studentRepository.findByClassName(className)
+                .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    public List<StudentDTO> getActiveStudents() {
+
+        return studentRepository.findByIsActiveTrue()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<StudentDTO> searchStudents(String name) {
+
+        return studentRepository
+                .findByUserFirstNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Page<StudentDTO> getStudents(int page, int size) {
+
+        return studentRepository
+                .findAll(PageRequest.of(page, size))
+                .map(this::mapToDTO);
+    }
+
     public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Student not found"));
 
         student.setRollNumber(studentDTO.getRollNumber());
         student.setClassName(studentDTO.getClassName());
@@ -84,18 +139,25 @@ public class StudentService {
         student.setParentPhone(studentDTO.getParentPhone());
 
         Student updatedStudent = studentRepository.save(student);
+
         return mapToDTO(updatedStudent);
     }
 
-    @Transactional
     public void deleteStudent(Long id) {
+
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Student not found"));
+
         student.setIsActive(false);
+
         studentRepository.save(student);
     }
 
     private StudentDTO mapToDTO(Student student) {
+
         return StudentDTO.builder()
                 .id(student.getId())
                 .userId(student.getUser().getId())
