@@ -34,10 +34,12 @@ public class MarksService {
     public MarksDTO createMarks(MarksDTO dto) {
 
         Student student = studentRepository.findById(dto.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Student not found"));
 
         Course course = courseRepository.findById(dto.getCourseId())
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Course not found"));
 
         Marks marks = Marks.builder()
                 .student(student)
@@ -62,9 +64,34 @@ public class MarksService {
     public MarksDTO getMarksById(Long id) {
 
         Marks marks = marksRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Marks record not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Marks record not found"));
 
         return mapToDTO(marks);
+    }
+
+    public MarksDTO updateMarks(Long id, MarksDTO dto) {
+
+        Marks marks = marksRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Marks not found"));
+
+        marks.setMarksObtained(dto.getMarksObtained());
+        marks.setTotalMarks(dto.getTotalMarks());
+        marks.setRemarks(dto.getRemarks());
+
+        Marks updatedMarks = marksRepository.save(marks);
+
+        return mapToDTO(updatedMarks);
+    }
+
+    public void deleteMarks(Long id) {
+
+        Marks marks = marksRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Marks not found"));
+
+        marksRepository.delete(marks);
     }
 
     private MarksDTO mapToDTO(Marks marks) {

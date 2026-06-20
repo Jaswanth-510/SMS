@@ -23,19 +23,53 @@ public class MarksController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
-    public ResponseEntity<MarksDTO> createMarks(@RequestBody MarksDTO marksDTO) {
-        return ResponseEntity.ok(marksService.createMarks(marksDTO));
+    public ResponseEntity<MarksDTO> createMarks(
+            @RequestBody MarksDTO marksDTO) {
+
+        return ResponseEntity.ok(
+                marksService.createMarks(marksDTO)
+        );
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     public ResponseEntity<List<MarksDTO>> getAllMarks() {
-        return ResponseEntity.ok(marksService.getAllMarks());
+
+        return ResponseEntity.ok(
+                marksService.getAllMarks()
+        );
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
-    public ResponseEntity<MarksDTO> getMarksById(@PathVariable Long id) {
-        return ResponseEntity.ok(marksService.getMarksById(id));
+    public ResponseEntity<MarksDTO> getMarksById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                marksService.getMarksById(id)
+        );
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
+    public ResponseEntity<MarksDTO> updateMarks(
+            @PathVariable Long id,
+            @RequestBody MarksDTO marksDTO) {
+
+        return ResponseEntity.ok(
+                marksService.updateMarks(id, marksDTO)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteMarks(
+            @PathVariable Long id) {
+
+        marksService.deleteMarks(id);
+
+        return ResponseEntity.ok(
+                "Marks deleted successfully"
+        );
     }
 }
