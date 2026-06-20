@@ -18,8 +18,10 @@ public class FeeService {
     private final FeeRepository feeRepository;
     private final StudentRepository studentRepository;
 
-    public FeeService(FeeRepository feeRepository,
-                      StudentRepository studentRepository) {
+    public FeeService(
+            FeeRepository feeRepository,
+            StudentRepository studentRepository) {
+
         this.feeRepository = feeRepository;
         this.studentRepository = studentRepository;
     }
@@ -27,7 +29,8 @@ public class FeeService {
     public FeeDTO createFee(FeeDTO dto) {
 
         Student student = studentRepository.findById(dto.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Student not found"));
 
         Fee fee = Fee.builder()
                 .student(student)
@@ -36,10 +39,13 @@ public class FeeService {
                 .dueDate(dto.getDueDate())
                 .build();
 
-        return mapToDTO(feeRepository.save(fee));
+        Fee savedFee = feeRepository.save(fee);
+
+        return mapToDTO(savedFee);
     }
 
     public List<FeeDTO> getAllFees() {
+
         return feeRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
@@ -49,9 +55,34 @@ public class FeeService {
     public FeeDTO getFeeById(Long id) {
 
         Fee fee = feeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fee not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Fee not found"));
 
         return mapToDTO(fee);
+    }
+
+    public FeeDTO updateFee(Long id, FeeDTO dto) {
+
+        Fee fee = feeRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Fee not found"));
+
+        fee.setTotalAmount(dto.getTotalAmount());
+        fee.setPaidAmount(dto.getPaidAmount());
+        fee.setDueDate(dto.getDueDate());
+
+        Fee updatedFee = feeRepository.save(fee);
+
+        return mapToDTO(updatedFee);
+    }
+
+    public void deleteFee(Long id) {
+
+        Fee fee = feeRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Fee not found"));
+
+        feeRepository.delete(fee);
     }
 
     private FeeDTO mapToDTO(Fee fee) {

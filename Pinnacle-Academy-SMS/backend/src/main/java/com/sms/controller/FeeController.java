@@ -49,4 +49,27 @@ public class FeeController {
                 feeService.getFeeById(id)
         );
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<FeeDTO> updateFee(
+            @PathVariable Long id,
+            @RequestBody FeeDTO dto) {
+
+        return ResponseEntity.ok(
+                feeService.updateFee(id, dto)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteFee(
+            @PathVariable Long id) {
+
+        feeService.deleteFee(id);
+
+        return ResponseEntity.ok(
+                "Fee deleted successfully"
+        );
+    }
 }
