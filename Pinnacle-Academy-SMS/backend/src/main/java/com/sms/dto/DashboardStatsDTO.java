@@ -1,6 +1,9 @@
 package com.sms.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -9,8 +12,16 @@ import lombok.*;
 public class DashboardStatsDTO {
 
     private long totalStudents;
+
+    private long activeStudents;
+
     private long totalTeachers;
+
     private long totalCourses;
+
     private long totalAttendance;
+
     private long totalMarks;
+
+    private long totalFees;
 }
