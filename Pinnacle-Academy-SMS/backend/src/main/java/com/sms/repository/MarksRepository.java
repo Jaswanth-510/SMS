@@ -7,11 +7,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MarksRepository extends JpaRepository<Marks, Long> {
+public interface MarksRepository
+        extends JpaRepository<Marks, Long> {
 
-    List<Marks> findByStudent_Id(Long studentId);
+    List<Marks> findByStudent_Id(
+            Long studentId);
 
-    List<Marks> findByStudent_IdAndCourse_Id(Long studentId, Long courseId);
+    List<Marks> findByCourse_Id(
+            Long courseId);
 
-    List<Marks> findByCourse_Id(Long courseId);
+    List<Marks> findByStudent_IdAndCourse_Id(
+            Long studentId,
+            Long courseId);
 }

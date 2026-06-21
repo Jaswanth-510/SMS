@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,13 +34,15 @@ public class MarksService {
 
     public MarksDTO createMarks(MarksDTO dto) {
 
-        Student student = studentRepository.findById(dto.getStudentId())
+        Student student = studentRepository.findById(
+                dto.getStudentId())
                 .orElseThrow(() ->
                         new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
                                 "Student not found"));
 
-        Course course = courseRepository.findById(dto.getCourseId())
+        Course course = courseRepository.findById(
+                dto.getCourseId())
                 .orElseThrow(() ->
                         new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -55,19 +56,20 @@ public class MarksService {
                 .remarks(dto.getRemarks())
                 .build();
 
-        Marks savedMarks = marksRepository.save(marks);
-
-        return mapToDTO(savedMarks);
+        return mapToDTO(
+                marksRepository.save(marks));
     }
 
+    @Transactional(readOnly = true)
     public List<MarksDTO> getAllMarks() {
 
         return marksRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public MarksDTO getMarksById(Long id) {
 
         Marks marks = marksRepository.findById(id)
@@ -79,7 +81,29 @@ public class MarksService {
         return mapToDTO(marks);
     }
 
-    public MarksDTO updateMarks(Long id, MarksDTO dto) {
+    @Transactional(readOnly = true)
+    public List<MarksDTO> getMarksByStudent(
+            Long studentId) {
+
+        return marksRepository.findByStudent_Id(studentId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MarksDTO> getMarksByCourse(
+            Long courseId) {
+
+        return marksRepository.findByCourse_Id(courseId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    public MarksDTO updateMarks(
+            Long id,
+            MarksDTO dto) {
 
         Marks marks = marksRepository.findById(id)
                 .orElseThrow(() ->
@@ -87,11 +111,17 @@ public class MarksService {
                                 HttpStatus.NOT_FOUND,
                                 "Marks not found"));
 
-        marks.setMarksObtained(dto.getMarksObtained());
-        marks.setTotalMarks(dto.getTotalMarks());
-        marks.setRemarks(dto.getRemarks());
+        marks.setMarksObtained(
+                dto.getMarksObtained());
 
-        Marks updatedMarks = marksRepository.save(marks);
+        marks.setTotalMarks(
+                dto.getTotalMarks());
+
+        marks.setRemarks(
+                dto.getRemarks());
+
+        Marks updatedMarks =
+                marksRepository.save(marks);
 
         return mapToDTO(updatedMarks);
     }
@@ -110,21 +140,34 @@ public class MarksService {
     private MarksDTO mapToDTO(Marks marks) {
 
         String studentName =
-                marks.getStudent().getUser().getFirstName()
+                marks.getStudent()
+                        .getUser()
+                        .getFirstName()
                         + " "
-                        + marks.getStudent().getUser().getLastName();
+                        + marks.getStudent()
+                                .getUser()
+                                .getLastName();
 
         return MarksDTO.builder()
                 .id(marks.getId())
-                .studentId(marks.getStudent().getId())
+                .studentId(
+                        marks.getStudent().getId())
                 .studentName(studentName)
-                .courseId(marks.getCourse().getId())
-                .courseName(marks.getCourse().getCourseName())
-                .marksObtained(marks.getMarksObtained())
-                .totalMarks(marks.getTotalMarks())
-                .percentage(marks.getPercentage())
-                .grade(marks.getGrade())
-                .remarks(marks.getRemarks())
+                .courseId(
+                        marks.getCourse().getId())
+                .courseName(
+                        marks.getCourse()
+                                .getCourseName())
+                .marksObtained(
+                        marks.getMarksObtained())
+                .totalMarks(
+                        marks.getTotalMarks())
+                .percentage(
+                        marks.getPercentage())
+                .grade(
+                        marks.getGrade())
+                .remarks(
+                        marks.getRemarks())
                 .build();
     }
 }

@@ -2,6 +2,7 @@ package com.sms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,12 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Student {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            unique = true)
     private User user;
 
     @Column(nullable = false, unique = true)
@@ -38,16 +43,13 @@ public class Student {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = true)
     private String address;
 
-    @Column(nullable = true)
     private String parentName;
 
-    @Column(nullable = true)
     private String parentPhone;
 
-   @Builder.Default
+    @Builder.Default
     @Column(nullable = false)
     private LocalDate enrollmentDate = LocalDate.now();
 
@@ -67,10 +69,14 @@ public class Student {
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-   @PrePersist
+    @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+
+        if (isActive == null) {
+            isActive = true;
+        }
     }
 
     @PreUpdate

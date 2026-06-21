@@ -17,8 +17,11 @@ public class Fee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "student_id",
+            nullable = false
+    )
     private Student student;
 
     @Column(nullable = false)
@@ -40,8 +43,11 @@ public class Fee {
     @PreUpdate
     public void calculateFeeStatus() {
 
-        if (totalAmount != null && paidAmount != null) {
-            pendingAmount = totalAmount - paidAmount;
+        if (totalAmount != null &&
+            paidAmount != null) {
+
+            pendingAmount =
+                    totalAmount - paidAmount;
 
             if (pendingAmount <= 0) {
                 status = "PAID";

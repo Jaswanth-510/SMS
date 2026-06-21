@@ -8,8 +8,10 @@ import com.sms.repository.MarksRepository;
 import com.sms.repository.StudentRepository;
 import com.sms.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class DashboardService {
 
     private final StudentRepository studentRepository;
@@ -40,7 +42,7 @@ public class DashboardService {
         return DashboardStatsDTO.builder()
                 .totalStudents(studentRepository.count())
                 .activeStudents(
-                        studentRepository.findByIsActiveTrue().size())
+                        studentRepository.countByIsActiveTrue())
                 .totalTeachers(teacherRepository.count())
                 .totalCourses(courseRepository.count())
                 .totalAttendance(attendanceRepository.count())

@@ -2,6 +2,7 @@ package com.sms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -17,12 +18,18 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "student_id",
+            nullable = false
+    )
     private Student student;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "course_id",
+            nullable = false
+    )
     private Course course;
 
     @Column(nullable = false)
@@ -32,11 +39,13 @@ public class Attendance {
     @Column(nullable = false)
     private AttendanceStatus status;
 
-    @Column
     private String remarks;
 
     @Builder.Default
-    @Column(nullable = false, updatable = false)
+    @Column(
+            nullable = false,
+            updatable = false
+    )
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder.Default
@@ -44,13 +53,13 @@ public class Attendance {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    public void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
